@@ -1,23 +1,18 @@
-import Footer from './components/Footer';
-import Header from './components/Header';
-import { BrowserRouter } from 'react-router-dom';
-
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import { BrowserRouter, Outlet } from "react-router-dom";
+import HomeScreen from "./screens/HomeScreen";
 
 export default function App() {
   return (
     <div>
-      <BrowserRouter>
-       <div className='min-h-screen flex flex-col'>
+      <div className="min-h-screen flex flex-col">
         <Header />
-        <main className='container mx-auto flex-grow'>
-          sdfsdfdsf
-
+        <main className="container mx-auto flex-grow">
+          <Outlet />
         </main>
         <Footer />
-       </div>
-      </BrowserRouter>
-     
+      </div>
     </div>
-  )
+  );
 }
-
