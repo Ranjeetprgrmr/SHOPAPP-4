@@ -1,13 +1,24 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { products } from "../data/products";
-import { Link } from "react-router-dom";
+import React,{ useState, useEffect} from "react";
+import { useParams, Link } from "react-router-dom";
+import axios from 'axios';
 
 export default function ProductScreen() {
+  const [product, setProduct] = useState({});
   const { id } = useParams();
   console.log("this is id", id);
-  const product = products.find((p) => p.id == id);
+  // const product = products.find((p) => p.id == id);
   console.log("this is product", product);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data } = await axios.get(`/api/products/${id}`);
+      console.log('this is useEffect data',data)
+      setProduct(data.product);
+    };
+    fetchProduct();
+  }, [id]);
+
+
   return (
     <div className="container mx-auto mt-8 p-4">
       <Link to='/'>
@@ -31,7 +42,7 @@ export default function ProductScreen() {
             <span className="text-gray-600">{product.numReviews}</span>
           </div>
           <p className="text-gray-700 mt-2">
-            Price: ${product.price.toFixed(2)}
+            Price: ${product?.price?.toFixed(2)}
           </p>
           <p className="text-gray-700 mt-2">Stock: {product.countInStock}</p>
           <div className="mt-4">
