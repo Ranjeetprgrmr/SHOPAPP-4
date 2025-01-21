@@ -9,7 +9,9 @@ router.get(
   asyncHandler(async (req, res) => {
     const products = await Product.find({});
     // console.log('this is products',products)
-    res.json(products);
+    if (products) {
+      res.json(products);
+    }
   })
 );
 
@@ -20,7 +22,12 @@ router.get(
     // console.log("this is id", req.params);
 
     const product = await Product.findById(req.params.id);
-    res.json(product);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404);
+      throw new Error("Product not found");
+    }
   })
 );
 
