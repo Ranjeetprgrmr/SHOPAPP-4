@@ -10,17 +10,11 @@ export default function HomeScreen() {
     return <Spinner />;
   }
 
-  // if (error) {
-  //    toast.error(error?.data?.message || error?.error);
-  // }
-  // if(error){
-  //   console.log("error thiis is")
-  //   toast("this is error")
-  // }
   if (error) {
-    toast.error('Something went wrong');
-    return null;
+     toast.error(error?.data?.message || error?.error);
+     return null; // if this is null, the rest of the code will not be executed,,,and toast message is displayed or else it will directly show products undefined.and 'throw new Error constructor in the backend will not work.
   }
+
   return (
     <>
    

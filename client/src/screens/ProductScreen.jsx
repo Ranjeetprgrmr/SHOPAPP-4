@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useGetProductDetailsQuery } from "../slices/productApiSlice";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 export default function ProductScreen() {
   const { id: productId } = useParams();
@@ -10,8 +11,13 @@ export default function ProductScreen() {
     error,
   } = useGetProductDetailsQuery(productId);
 
-  if(isLoading){
-    return <Spinner />
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    toast.error(error?.data?.message || error?.error);
+    return null;
   }
 
   return (
@@ -21,7 +27,12 @@ export default function ProductScreen() {
           Go Back
         </button>
       </Link>
-     
+
+      {isLoading ? (
+        <Spinner />
+      ) : error ? (
+        toast.error(error?.data?.message || error?.error)
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="md:col-span-1 mx-auto">
             <img
@@ -61,7 +72,7 @@ export default function ProductScreen() {
             </button>
           </div>
         </div>
-      
+      )}
     </div>
   );
 }
