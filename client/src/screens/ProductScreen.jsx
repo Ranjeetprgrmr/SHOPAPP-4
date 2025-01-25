@@ -2,9 +2,16 @@ import { useParams, Link } from "react-router-dom";
 import { useGetProductDetailsQuery } from "../slices/productApiSlice";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { addToCart } from "../slices/cartSlice";
 
 export default function ProductScreen() {
+  const [qty, setQty] = useState(1);
   const { id: productId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     data: product,
     isLoading,
@@ -19,6 +26,11 @@ export default function ProductScreen() {
     toast.error(error?.data?.message || error?.error);
     return null;
   }
+
+  const addtoCartHandler = () => {
+    dispatch(addToCart({ ...product, qty }));
+    navigate("/cart");
+  };
 
   return (
     <div className="container mx-auto mt-8 p-4">
@@ -59,6 +71,7 @@ export default function ProductScreen() {
               <select
                 id="quantity"
                 className="border border-gray-300 rounded-md px-2 py-1 ml-2"
+                onChange={(e) => setQty(e.target.value)}
               >
                 {[...Array(product.countInStock).keys()].map((num) => (
                   <option key={num + 1} value={num + 1}>
@@ -67,7 +80,7 @@ export default function ProductScreen() {
                 ))}
               </select>
             </div>
-            <button className="bg-yellow-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-yellow-600">
+            <button onClick={addtoCartHandler} className="bg-yellow-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-yellow-600">
               Add to Cart
             </button>
           </div>
