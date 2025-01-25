@@ -1,10 +1,17 @@
 import Product from "../models/productModel.js";
 import asyncHandler from "express-async-handler";
 
+// const getProducts = asyncHandler(async (req, res) => {
+//   const products = await Product.find({});
+//   if (products) {
+//     res.json(products);
+//   }
+// });
 const getProducts = asyncHandler(async (req, res) => {
+  throw new Error("Failed to fetch products");
   const products = await Product.find({});
-  if (products) {
-    res.json(products);
+  if (!products) {
+    throw new Error("Failed to fetch products");
   }
 });
 

@@ -1,70 +1,67 @@
-import React,{ useState, useEffect} from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from 'axios';
+import { useGetProductDetailsQuery } from "../slices/productApiSlice";
+import Spinner from "../components/Spinner";
 
 export default function ProductScreen() {
-  const [product, setProduct] = useState({});
-  const { id } = useParams();
-  console.log("this is id", id);
-  // const product = products.find((p) => p.id == id);
-  console.log("this is product", product);
+  const { id: productId } = useParams();
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductDetailsQuery(productId);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/products/${id}`);
-      console.log('this is useEffect data',data)
-      setProduct(data.product);
-    };
-    fetchProduct();
-  }, [id]);
-
+  if(isLoading){
+    return <Spinner />
+  }
 
   return (
     <div className="container mx-auto mt-8 p-4">
-      <Link to='/'>
+      <Link to="/">
         <button className="bg-gray-800 text-white py-2 px-4 rounded-md mb-4">
           Go Back
         </button>
       </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="md:col-span-1 mx-auto">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-[470px] h-[470px] "
-          />
-        </div>
-        <div className="md:col-span-1 text-start">
-          <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
-          <p className="text-gray-700 mt-2">{product.description}</p>
-          <div className="flex items-center mt-4">
-            <span className="text-yellow-500 mr-1">{product.rating}</span>
-            <span className="text-gray-600">{product.numReviews}</span>
+     
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="md:col-span-1 mx-auto">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-[470px] h-[470px] "
+            />
           </div>
-          <p className="text-gray-700 mt-2">
-            Price: ${product?.price?.toFixed(2)}
-          </p>
-          <p className="text-gray-700 mt-2">Stock: {product.countInStock}</p>
-          <div className="mt-4">
-            <label htmlFor="quantity" className="text-gray-700">
-              Quantity:
-            </label>
-            <select
-              id="quantity"
-              className="border border-gray-300 rounded-md px-2 py-1 ml-2"
-            >
-              {[...Array(product.countInStock).keys()].map((num) => (
-                <option key={num + 1} value={num + 1}>
-                  {num + 1}
-                </option>
-              ))}
-            </select>
+          <div className="md:col-span-1 text-start">
+            <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
+            <p className="text-gray-700 mt-2">{product.description}</p>
+            <div className="flex items-center mt-4">
+              <span className="text-yellow-500 mr-1">{product.rating}</span>
+              <span className="text-gray-600">{product.numReviews}</span>
+            </div>
+            <p className="text-gray-700 mt-2">
+              Price: ${product?.price?.toFixed(2)}
+            </p>
+            <p className="text-gray-700 mt-2">Stock: {product.countInStock}</p>
+            <div className="mt-4">
+              <label htmlFor="quantity" className="text-gray-700">
+                Quantity:
+              </label>
+              <select
+                id="quantity"
+                className="border border-gray-300 rounded-md px-2 py-1 ml-2"
+              >
+                {[...Array(product.countInStock).keys()].map((num) => (
+                  <option key={num + 1} value={num + 1}>
+                    {num + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button className="bg-yellow-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-yellow-600">
+              Add to Cart
+            </button>
           </div>
-          <button className="bg-yellow-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-yellow-600">
-            Add to Cart
-          </button>
         </div>
-      </div>
+      
     </div>
   );
 }
